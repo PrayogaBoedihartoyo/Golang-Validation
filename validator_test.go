@@ -11,3 +11,13 @@ func TestValidation(t *testing.T) {
 		t.Error("validator is nil")
 	}
 }
+
+func TestValidationVariable(t *testing.T) {
+	var validate *validator.Validate = validator.New()
+	user := "tag"
+
+	err := validate.Var(user, "required")
+	if err != nil {
+		t.Error(err)
+	}
+}
