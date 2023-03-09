@@ -22,3 +22,58 @@ func TestValidationStruct(t *testing.T) {
 	}
 
 }
+
+func TestNestedStruct(t *testing.T) {
+	type Address struct {
+		City    string `validate:"required"`
+		Country string `validate:"required"`
+	}
+
+	type User struct {
+		Name    string  `validate:"required"`
+		Address Address `validate:"required"`
+	}
+
+	validate := validator.New()
+	loginRequest := User{
+		Name: "Prayoga",
+		Address: Address{
+			City:    "Jakarta",
+			Country: "Indonesia",
+		},
+	}
+	err := validate.Struct(loginRequest)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+}
+
+func TestCollection(t *testing.T) {
+	type Address struct {
+		City    string `validate:"required"`
+		Country string `validate:"required"`
+	}
+
+	type User struct {
+		Name      string    `validate:"required"`
+		Addresses []Address `validate:"required,dive"`
+	}
+
+	validate := validator.New()
+	loginRequest := User{
+		Name: "Prayoga",
+		Addresses: []Address{
+			{
+				City:    "Jakarta",
+				Country: "Indonesia",
+			}, {
+				City:    "Bandung",
+				Country: "",
+			},
+		},
+	}
+	err := validate.Struct(loginRequest)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+}
